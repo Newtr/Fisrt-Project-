@@ -80,7 +80,7 @@ void CreateStudent()
     cout<<"Student was created successfully!"<<endl;
 }
 void ShowAllInfo()
-{
+{ 
     string str;
     Student stud;
     ifstream IFile;
