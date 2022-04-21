@@ -64,21 +64,20 @@ void Student::ShowData(){
 void CreateStudent()
 {
     Student stud;
-    string str;
     ofstream OFile;
     OFile.open("Student.txt", ios::binary|ios::app);
     stud.GetInfo();
-/*     OFile<<stud.Name<<endl;
-    OFile<<stud.eng_mark<<endl;
-    OFile<<stud.math_mark<<endl;
-    OFile<<stud.phys_mark<<endl;
-    OFile<<stud.sci_mark<<endl;
-    OFile<<stud.art_mark<<endl;
-    OFile<<stud.status<<endl; */
-    OFile.write(reinterpret_cast<char*>(&stud), sizeof(stud));
+    OFile<<"Name: "<<stud.Name
+    <<" English: "<<stud.eng_mark
+    <<" Math: "<<stud.math_mark
+    <<" Physics: "<<stud.phys_mark
+    <<" Science: "<<stud.sci_mark
+    <<" Art: "<<stud.art_mark
+    <<" Status: "<<stud.status<<endl;
     OFile.close();
     cout<<"Student was created successfully!"<<endl;
 }
+
 void ShowAllInfo()
 { 
     string str;
@@ -108,14 +107,56 @@ void ShowAllInfo()
     cin.ignore();
     cin.get();
 }
-/* void DeleteStudent(int); */
+
+void DeleteStudent(){
+    string str, StudentName, NameInFile;
+    bool NewWord=false;
+    int count=6;
+    ifstream IFile;
+    IFile.open("Student.txt",ios::binary);
+    cout<<"Enter name of student: ";
+    cin>>StudentName;
+    ofstream OFile;
+    OFile.open("temp.txt",ios::binary|ios::app);
+    while (!IFile.eof() && NewWord==false)
+    {
+        getline(IFile,str);
+        if (str=="")
+        {
+            NewWord=true;
+            continue;
+        }
+        
+        while (str.at(count)!=' ')
+        {
+            NameInFile+=str.at(count);
+            count++;
+        }
+        if (NameInFile==StudentName)
+        {
+            continue;
+        }
+        else if (NameInFile!=StudentName)
+        {
+        OFile<<str<<endl;
+        NameInFile="";
+        count=6;
+        }
+    }
+    OFile.close();
+    IFile.close();
+    remove("Student.txt");
+    rename("temp.txt","Student.txt");
+    cout<<"All good!";
+
+}
 
 int main(){
     int UserChoose;
     do{
     cout<<"1)Create Student"<<endl;
     cout<<"2)Show All Information about students"<<endl;
-/*     cout<<"3)Delete Student"<<endl; */
+    cout<<"3)Delete Student"<<endl;
     cout<<"4)Exit"<<endl;
     cout<<"Your choose : "; cin>>UserChoose;
     switch (UserChoose)
@@ -125,6 +166,9 @@ int main(){
         break;
     case 2:
         ShowAllInfo();
+        break;
+    case 3:
+        DeleteStudent();
         break;
     }
     }while(UserChoose!=4);
